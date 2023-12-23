@@ -27,13 +27,15 @@ module.exports = {
 
     async createUser(req, res) {
         try {
-            const user = await User.create(req.body);
-            res.json(user);
-        } catch (err) {
-            res.status(500).json(err.message);
-            
-        }
-    },
+            await User.init();
+            await User.create(req.body)
+           
+            res.json(201).end();
+          } catch (err) {
+            console.log(err);
+            res.status(500).json(err);
+          }
+        },
 
     async deleteUser(req, res) {
         try {
@@ -47,6 +49,17 @@ module.exports = {
             res.json({ message: 'User and thoughts deleted!'})
         } catch (err) {
             res.status(500).json(err.message) 
+        }
+    },
+    async updateUser(req, res) {
+        try {
+            const user = await User.findOneAndUpdate(
+                {_id: req.params.userId},
+                {$set: req.body },
+                {runValidators: true, new: true}
+            )
+        } catch (err) { 
+            res.status(500).json(err.message);
         }
     }
 }
