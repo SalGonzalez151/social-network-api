@@ -18,7 +18,14 @@ const reactionSchema = new Schema ({
         type: Date,
         default: Date.now,
     }
-})
+},
+{   
+    toJSON: {
+        getters: true,
+    },
+    id: false
+}
+)
 
 const thoughtSchema = new Schema({
     thoughtText: {
@@ -30,6 +37,9 @@ const thoughtSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
+        get: function (value) {
+            return value.toLocaleString()
+        }
     },
     username: {
         type: String,
@@ -40,7 +50,6 @@ const thoughtSchema = new Schema({
     {   
         toJSON: {
             virtuals: true,
-            getters: true,
         },
         id: false
     })
@@ -52,4 +61,4 @@ thoughtSchema
 })
 const Thought = model('thought', thoughtSchema)
 
-module.exports = { Thought };
+module.exports = Thought;
