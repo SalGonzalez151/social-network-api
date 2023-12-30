@@ -58,8 +58,39 @@ module.exports = {
                 {$set: req.body },
                 {runValidators: true, new: true}
             )
+            res.json(user)
         } catch (err) { 
             res.status(500).json(err.message);
+        }
+    },
+    async addFriend(req, res) {
+        try {
+            const user = await user.findOneAndUpdate(
+                {_id: req.params.userId},
+                {$adToSet: { friends: req.body}},
+                {runValidators: true, new: true}
+            )
+            if (!user) {
+                return res.status(400).json({ message: 'No User found with that ID'})
+            }
+            res.json(user)
+        } catch (err) {
+            res.status(500).json(err.message)
+        }
+    },
+    async removeFriend(req, res) {
+        try {
+            const user = await user.findOneAndUpdate(
+                {_id: req.params.userId},
+                {$pull: { friends: { friendsId: req.params.friendsId}}},
+                { runValidators: true, new: true}
+            )
+            if (!user) {
+                return res.status(404).json({ message: 'No user found with that ID'})
+            }
+            res.json(user)
+        } catch (err) {
+            res.status(500).json(err.message)
         }
     }
 }
