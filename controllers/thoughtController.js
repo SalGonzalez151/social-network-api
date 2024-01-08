@@ -16,7 +16,7 @@ module.exports = {
             .select('-__v');
 
             if (!thought) {
-                return res.status(404).json({ message: "No course with that ID"})
+                return res.status(404).json({ message: "No user with that ID"})
             }
 
             res.json(thought);
@@ -70,7 +70,7 @@ module.exports = {
         try {
             const thought = await Thought.findOneAndUpdate(
                 {_id: req.params.thoughtId},
-                {$addToSet: { reaction: req.body}},
+                {$addToSet: { reactions: req.body}},
                 {runValidators: true, new: true}
             )
 
@@ -87,7 +87,7 @@ module.exports = {
         try {
             const thought = await Thought.findOneAndUpdate(
                 {_id: req.params.thoughtId},
-                {$pull: { reaction: {reactionId: req.params.reactionId}}},
+                {$pull: { reactions: {reactionId: req.params.reactionId}}},
                 {runValidators: true, new: true}
             );
 
